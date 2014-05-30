@@ -97,13 +97,3 @@ func (c *config) SetHandlerInit(handler Handler) error {
 func (c *config) Set(key string, value interface{}) error {
 	return c.handler.Set(key, value)
 }
-
-
-
-
-
-
-
-
-
-

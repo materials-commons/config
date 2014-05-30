@@ -52,10 +52,3 @@ func (h *syncHandler) Set(key string, value interface{}) error {
 	h.mutex.Lock()
 	return h.handler.Set(key, value)
 }
-
-
-
-
-
-
-

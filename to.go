@@ -53,8 +53,3 @@ func ToString(in interface{}) (string, error) {
 	}
 	return "", ErrBadType
 }
-
-
-
-
-

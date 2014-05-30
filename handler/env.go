@@ -1,6 +1,6 @@
 package handler
 
-import(
+import (
 	"github.com/materials-commons/config"
 	"os"
 	"strings"
@@ -47,6 +47,3 @@ func (h *envHandler) Set(key string, value interface{}) error {
 
 	return nil
 }
-
-
-
