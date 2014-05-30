@@ -17,10 +17,11 @@ func Properties(r io.Reader) config.Loader {
 
 // Load loads the data from the reader.
 func (l *propertiesLoader) Load(out interface{}) error {
-	var properties p.Properties
+	properties := make(p.Properties)
 	if err := properties.Load(l.r); err != nil {
 		return err
 	}
-	out = properties
+	o := out.(*map[string]string)
+	*o = map[string]string(properties)
 	return nil
 }
