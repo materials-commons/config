@@ -6,8 +6,8 @@ import (
 	"time"
 )
 
-// toTime converts in to a time.Time value.
-func toTime(in interface{}) (time.Time, error) {
+// ToTime converts in to a time.Time value.
+func ToTime(in interface{}) (time.Time, error) {
 	switch val := in.(type) {
 	case int64:
 		return time.Unix(val, 0), nil
@@ -20,8 +20,8 @@ func toTime(in interface{}) (time.Time, error) {
 	}
 }
 
-// toBool converts in to a bool value.
-func toBool(in interface{}) (bool, error) {
+// ToBool converts in to a bool value.
+func ToBool(in interface{}) (bool, error) {
 	switch val := in.(type) {
 	case string:
 		sval, err := strconv.ParseBool(val)
@@ -38,18 +38,23 @@ func toBool(in interface{}) (bool, error) {
 	}
 }
 
-// toInt64 converts in to a int64 value.
-func toInt(in interface{}) (int, error) {
+// ToInt converts in to a int value.
+func ToInt(in interface{}) (int, error) {
 	if val, err := cast.ToIntE(in); err == nil {
 		return val, nil
 	}
 	return 0, ErrBadType
 }
 
-// toString converts in to a string value.
-func toString(in interface{}) (string, error) {
+// ToString converts in to a string value.
+func ToString(in interface{}) (string, error) {
 	if val, err := cast.ToStringE(in); err == nil {
 		return val, nil
 	}
 	return "", ErrBadType
 }
+
+
+
+
+
