@@ -11,10 +11,12 @@ type yamlLoader struct {
 	r io.Reader
 }
 
+// YAML creates a new Loader for YAML formatted data.
 func YAML(r io.Reader) config.Loader {
 	return &yamlLoader{r: r}
 }
 
+// Load loads the data from the reader.
 func (l *yamlLoader) Load(out interface{}) error {
 	var buf bytes.Buffer
 	buf.ReadFrom(l.r)
