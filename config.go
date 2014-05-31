@@ -32,52 +32,48 @@ func (c *config) Init() error {
 }
 
 // Get returns the value for a key. It can return any value type.
-func (c *config) Get(key string) (interface{}, bool) {
-	return c.handler.Get(key)
+func (c *config) Get(key string, args ...interface{}) (interface{}, error) {
+	return c.handler.Get(key, args...)
 }
 
 // GetInt returns an integer value for a key. See TypeGetter interface for
 // error codes.
-func (c *config) GetInt(key string) (int, error) {
-	val, found := c.Get(key)
-	if found {
-		return ToInt(val)
+func (c *config) GetInt(key string, args ...interface{}) (int, error) {
+	val, err := c.Get(key, args...)
+	if err != nil {
+		return 0, err
 	}
-
-	return 0, ErrKeyNotFound
+	return ToInt(val)
 }
 
 // GetString returns an string value for a key. See TypeGetter interface for
 // error codes.
-func (c *config) GetString(key string) (string, error) {
-	val, found := c.Get(key)
-	if found {
-		return ToString(val)
+func (c *config) GetString(key string, args ...interface{}) (string, error) {
+	val, err := c.Get(key, args...)
+	if err != nil {
+		return "", err
 	}
-
-	return "", ErrKeyNotFound
+	return ToString(val)
 }
 
 // GetTime returns an time.Time value for a key. See TypeGetter interface for
 // error codes.
-func (c *config) GetTime(key string) (time.Time, error) {
-	val, found := c.Get(key)
-	if found {
-		return ToTime(val)
+func (c *config) GetTime(key string, args ...interface{}) (time.Time, error) {
+	val, err := c.Get(key, args...)
+	if err != nil {
+		return time.Time{}, err
 	}
-
-	return time.Time{}, ErrKeyNotFound
+	return ToTime(val)
 }
 
 // GetBool returns an bool value for a key. See TypeGetter interface for
 // error codes.
-func (c *config) GetBool(key string) (bool, error) {
-	val, found := c.Get(key)
-	if found {
-		return ToBool(val)
+func (c *config) GetBool(key string, args ...interface{}) (bool, error) {
+	val, err := c.Get(key, args...)
+	if err != nil {
+		return false, err
 	}
-
-	return false, ErrKeyNotFound
+	return ToBool(val)
 }
 
 // SetHandler changes the handler for a Configer. If this method is called
@@ -94,6 +90,6 @@ func (c *config) SetHandlerInit(handler Handler) error {
 }
 
 // Set sets key to value. See Setter interface for error codes.
-func (c *config) Set(key string, value interface{}) error {
-	return c.handler.Set(key, value)
+func (c *config) Set(key string, value interface{}, args ...interface{}) error {
+	return c.handler.Set(key, value, args...)
 }

@@ -24,28 +24,55 @@ func (h *multiHandler) Init() error {
 			return err
 		}
 	}
-
 	return nil
 }
 
 // Get iterates through each of the handlers in the order given in Multi. It stops
-// when one of the handlers returns a value.
-func (h *multiHandler) Get(key string) (interface{}, bool) {
+// when one of the handlers returns a value. Get checks each handler to see if it
+// should call it with the additional arguments.
+func (h *multiHandler) Get(key string, args ...interface{}) (interface{}, error) {
 	for _, handler := range h.handlers {
-		if val, found := handler.Get(key); found {
-			return val, true
+		switch {
+		case handler.Args():
+			if val, err := handler.Get(key, args...); err == nil {
+				return val, nil
+			}
+		default:
+			if val, err := handler.Get(key); err == nil {
+				return val, nil
+			}
 		}
 	}
-	return nil, false
+	return nil, config.ErrKeyNotFound
 }
 
 // Set iterates through each of the handlers in the order given in Multi. It stops
-// when one of the handlers successfully sets the key value.
-func (h *multiHandler) Set(key string, value interface{}) error {
+// when one of the handlers successfully sets the key value. Set checks each handler
+// to see if it should call it with the additional arguments.
+func (h *multiHandler) Set(key string, value interface{}, args ...interface{}) error {
 	for _, handler := range h.handlers {
-		if err := handler.Set(key, value); err == nil {
-			return nil
+		switch {
+		case handler.Args():
+			if err := handler.Set(key, value, args...); err == nil {
+				return nil
+			}
+		default:
+			if err := handler.Set(key, value); err == nil {
+				return nil
+			}
 		}
+
 	}
 	return config.ErrKeyNotSet
+}
+
+// Args returns true if any of the handlers takes additional arguments.
+// Otherwise it returns false.
+func (h *multiHandler) Args() bool {
+	for _, handler := range h.handlers {
+		if handler.Args() {
+			return true
+		}
+	}
+	return false
 }

@@ -13,4 +13,10 @@ var (
 
 	// ErrKeyNotSet key could not be set to value
 	ErrKeyNotSet = errors.New("key not set")
+
+	// ErrArgsNotSupported set and/or get routine don't support extra arguments
+	ErrArgsNotSupported = errors.New("args not supported")
+
+	// ErrBadArgs args passed in are bad
+	ErrBadArgs = errors.New("bad args")
 )

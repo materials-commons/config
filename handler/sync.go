@@ -40,15 +40,20 @@ func (h *syncHandler) Init() error {
 }
 
 // Get provides synchronized access to key retrieval.
-func (h *syncHandler) Get(key string) (interface{}, bool) {
+func (h *syncHandler) Get(key string, args ...interface{}) (interface{}, error) {
 	defer h.mutex.Unlock()
 	h.mutex.Lock()
-	return h.handler.Get(key)
+	return h.handler.Get(key, args...)
 }
 
 // Set provides synchronized access to setting a key.
-func (h *syncHandler) Set(key string, value interface{}) error {
+func (h *syncHandler) Set(key string, value interface{}, args ...interface{}) error {
 	defer h.mutex.Unlock()
 	h.mutex.Lock()
-	return h.handler.Set(key, value)
+	return h.handler.Set(key, value, args...)
+}
+
+// Args returns true if the handler takes additional arguments.
+func (h *syncHandler) Args() bool {
+	return h.handler.Args()
 }

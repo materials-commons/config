@@ -5,36 +5,39 @@ import (
 )
 
 type loaderHandler struct {
-	values map[string]interface{}
-	loader config.Loader
+	handler config.Handler
+	loader  config.Loader
 }
 
 // Loader returns a handler that reads the keys in from a loader.
 func Loader(loader config.Loader) config.Handler {
 	return &loaderHandler{
-		loader: loader,
+		handler: Map(),
+		loader:  loader,
 	}
 }
 
 // Init loads the keys by calling the loader.
 func (h *loaderHandler) Init() error {
-	var vals map[string]interface{}
-	if err := h.loader.Load(&vals); err != nil {
+	m := h.handler.(*mapHandler)
+	if err := h.loader.Load(&m.values); err != nil {
 		return err
 	}
-	h.values = vals
 	return nil
 }
 
 // Get retrieves keys loaded from the loader.
-func (h *loaderHandler) Get(key string) (interface{}, bool) {
-	val, found := h.values[key]
-	return val, found
+func (h *loaderHandler) Get(key string, args ...interface{}) (interface{}, error) {
+	return h.handler.Get(key, args...)
 }
 
 // Set sets the value of keys. You can create new keys, or modify existing ones.
 // Values are not persisted across runs.
-func (h *loaderHandler) Set(key string, value interface{}) error {
-	h.values[key] = value
-	return nil
+func (h *loaderHandler) Set(key string, value interface{}, args ...interface{}) error {
+	return h.handler.Set(key, value, args...)
+}
+
+// Args returns false. This handler doesn't accept additional arguments.
+func (h *loaderHandler) Args() bool {
+	return false
 }
