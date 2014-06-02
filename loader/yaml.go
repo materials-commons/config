@@ -2,7 +2,7 @@ package loader
 
 import (
 	"bytes"
-	"github.com/materials-commons/config"
+	"github.com/materials-commons/config/cfg"
 	"gopkg.in/yaml.v1"
 	"io"
 )
@@ -12,7 +12,7 @@ type yamlLoader struct {
 }
 
 // YAML creates a new Loader for YAML formatted data.
-func YAML(r io.Reader) config.Loader {
+func YAML(r io.Reader) cfg.Loader {
 	return &yamlLoader{r: r}
 }
 

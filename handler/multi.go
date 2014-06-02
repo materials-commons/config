@@ -1,17 +1,17 @@
 package handler
 
 import (
-	"github.com/materials-commons/config"
+	"github.com/materials-commons/config/cfg"
 )
 
 // Keeps a list of all the handlers to use.
 type multiHandler struct {
-	handlers []config.Handler
+	handlers []cfg.Handler
 }
 
 // Multi takes a list of Handlers and returns a single Handler that calls them.
 // The handlers are called in the order they are specified.
-func Multi(handlers ...config.Handler) config.Handler {
+func Multi(handlers ...cfg.Handler) cfg.Handler {
 	return &multiHandler{handlers: handlers}
 }
 
@@ -33,7 +33,7 @@ func (h *multiHandler) Init() error {
 func (h *multiHandler) Get(key string, args ...interface{}) (interface{}, error) {
 	lengthArgs := len(args)
 	if lengthArgs > 0 && !h.Args() {
-		return nil, config.ErrArgsNotSupported
+		return nil, cfg.ErrArgsNotSupported
 	}
 
 	for _, handler := range h.handlers {
@@ -48,7 +48,7 @@ func (h *multiHandler) Get(key string, args ...interface{}) (interface{}, error)
 			}
 		}
 	}
-	return nil, config.ErrKeyNotFound
+	return nil, cfg.ErrKeyNotFound
 }
 
 // Set iterates through each of the handlers in the order given in Multi. It stops
@@ -57,7 +57,7 @@ func (h *multiHandler) Get(key string, args ...interface{}) (interface{}, error)
 func (h *multiHandler) Set(key string, value interface{}, args ...interface{}) error {
 	lengthArgs := len(args)
 	if lengthArgs > 0 && !h.Args() {
-		return config.ErrArgsNotSupported
+		return cfg.ErrArgsNotSupported
 	}
 
 	for _, handler := range h.handlers {
@@ -73,7 +73,7 @@ func (h *multiHandler) Set(key string, value interface{}, args ...interface{}) e
 		}
 
 	}
-	return config.ErrKeyNotSet
+	return cfg.ErrKeyNotSet
 }
 
 // Args returns true if any of the handlers takes additional arguments.

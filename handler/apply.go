@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/materials-commons/config"
+	"github.com/materials-commons/config/cfg"
 	"strings"
 )
 
@@ -14,7 +14,7 @@ type ValueFunc func(value interface{}) (interface{}, error)
 type applyHandler struct {
 	keyFunc   KeyFunc
 	valueFunc ValueFunc
-	handler   config.Handler
+	handler   cfg.Handler
 }
 
 // Apply creates a new Apply Handler. An Apply handler applies the given key and
@@ -23,7 +23,7 @@ type applyHandler struct {
 //
 // An Apply handler can be used to transform values. For example, if keys should
 // always be in lower case you can apply a key func to lower case the keys.
-func Apply(keyFunc KeyFunc, valueFunc ValueFunc, handler config.Handler) config.Handler {
+func Apply(keyFunc KeyFunc, valueFunc ValueFunc, handler cfg.Handler) cfg.Handler {
 	return &applyHandler{
 		keyFunc:   keyFunc,
 		valueFunc: valueFunc,
@@ -76,21 +76,21 @@ func (h *applyHandler) Args() bool {
 }
 
 // ApplyKey creates a new Apply handler with the specified KeyFunc.
-func ApplyKey(keyFunc KeyFunc, handler config.Handler) config.Handler {
+func ApplyKey(keyFunc KeyFunc, handler cfg.Handler) cfg.Handler {
 	return Apply(keyFunc, nil, handler)
 }
 
 // ApplyValue creates a new Apply handler with the specified ValueFunc.
-func ApplyValue(valueFunc ValueFunc, handler config.Handler) config.Handler {
+func ApplyValue(valueFunc ValueFunc, handler cfg.Handler) cfg.Handler {
 	return Apply(nil, valueFunc, handler)
 }
 
 // LowercaseKey creates a new Apply handler that lower cases all keys.
-func LowercaseKey(handler config.Handler) config.Handler {
+func LowercaseKey(handler cfg.Handler) cfg.Handler {
 	return Apply(func(key string) (string, error) { return strings.ToLower(key), nil }, nil, handler)
 }
 
 // UppercaseKey creates a new Apply handler that upper cases all keys.
-func UppercaseKey(handler config.Handler) config.Handler {
+func UppercaseKey(handler cfg.Handler) cfg.Handler {
 	return Apply(func(key string) (string, error) { return strings.ToUpper(key), nil }, nil, handler)
 }

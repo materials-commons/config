@@ -1,16 +1,16 @@
 package handler
 
 import (
-	"github.com/materials-commons/config"
+	"github.com/materials-commons/config/cfg"
 )
 
 type loaderHandler struct {
-	handler config.Handler
-	loader  config.Loader
+	handler cfg.Handler
+	loader  cfg.Loader
 }
 
 // Loader returns a handler that reads the keys in from a loader.
-func Loader(loader config.Loader) config.Handler {
+func Loader(loader cfg.Loader) cfg.Handler {
 	return &loaderHandler{
 		handler: Map(),
 		loader:  loader,

@@ -1,19 +1,19 @@
 package handler
 
 import (
-	"github.com/materials-commons/config"
+	"github.com/materials-commons/config/cfg"
 )
 
 type prioritizedHandler struct {
-	byName     config.Handler
-	byPosition config.Handler
+	byName     cfg.Handler
+	byPosition cfg.Handler
 }
 
 // Prioritized creates a new Prioritized Handler. A Prioritized Handler performs
 // look ups in the order they were given. In addition the name of a handler can
 // be passed as the last argument to a set or get. If this is done, then the
 // named handler is used.
-func Prioritized(handlers ...*HandlerName) config.Handler {
+func Prioritized(handlers ...*HandlerName) cfg.Handler {
 	var hn = HandlerNames(handlers)
 	phandler := &prioritizedHandler{
 		byName:     ByName(handlers...),

@@ -1,14 +1,14 @@
 package handler
 
 import (
-	"github.com/materials-commons/config"
+	"github.com/materials-commons/config/cfg"
 	"sync"
 )
 
 // syncHandler holds all the attributes needed to provide
 // safe, synchronized access to a handler.
 type syncHandler struct {
-	handler config.Handler
+	handler cfg.Handler
 	loaded  bool
 	mutex   sync.Mutex
 }
@@ -16,7 +16,7 @@ type syncHandler struct {
 // Sync creates a Handler that can be safely accessed by multiple threads. It
 // ensures that the Init method only initializes a handler one time, regardless
 // of the number of threads that call it.
-func Sync(handler config.Handler) config.Handler {
+func Sync(handler cfg.Handler) cfg.Handler {
 	return &syncHandler{handler: handler}
 }
 

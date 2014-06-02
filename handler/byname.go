@@ -1,18 +1,18 @@
 package handler
 
 import (
-	"github.com/materials-commons/config"
+	"github.com/materials-commons/config/cfg"
 )
 
 // A HandlerName associates a name with a given handler.
 type HandlerName struct {
 	Name    string
-	Handler config.Handler
+	Handler cfg.Handler
 }
 
 // NameHandler is a convenience function for creating new instances
 // of a HandlerName type.
-func NameHandler(name string, handler config.Handler) *HandlerName {
+func NameHandler(name string, handler cfg.Handler) *HandlerName {
 	return &HandlerName{
 		Name:    name,
 		Handler: handler,
@@ -24,8 +24,8 @@ func NameHandler(name string, handler config.Handler) *HandlerName {
 type HandlerNames []*HandlerName
 
 // ToHandlers returns the handlers in an array of HandlerName.
-func (hns HandlerNames) ToHandlers() []config.Handler {
-	var handlers = make([]config.Handler, len(hns))
+func (hns HandlerNames) ToHandlers() []cfg.Handler {
+	var handlers = make([]cfg.Handler, len(hns))
 	for i, hn := range hns {
 		handlers[i] = hn.Handler
 	}
@@ -58,7 +58,7 @@ type byNameHandler struct {
 
 // ByName creates a new handler that maps a list of handlers to their name. You
 // can then do get and set operations against a named handler.
-func ByName(handlers ...*HandlerName) config.Handler {
+func ByName(handlers ...*HandlerName) cfg.Handler {
 	nhandler := &byNameHandler{
 		handlers: HandlerNames(handlers).ToMap(),
 	}
@@ -82,7 +82,7 @@ func (h *byNameHandler) Init() error {
 func (h *byNameHandler) Get(key string, args ...interface{}) (interface{}, error) {
 	switch length := len(args); length {
 	case 0:
-		return nil, config.ErrBadArgs
+		return nil, cfg.ErrBadArgs
 	default:
 		handler, err := h.getNamedHandler(args[0])
 		switch {
@@ -103,7 +103,7 @@ func (h *byNameHandler) Get(key string, args ...interface{}) (interface{}, error
 func (h *byNameHandler) Set(key string, value interface{}, args ...interface{}) error {
 	switch length := len(args); length {
 	case 0:
-		return config.ErrBadArgs
+		return cfg.ErrBadArgs
 	default:
 		handler, err := h.getNamedHandler(args[0])
 		switch {
@@ -120,15 +120,15 @@ func (h *byNameHandler) Set(key string, value interface{}, args ...interface{}) 
 
 // getNamedHandler takes the name attempts to cast it to a string and looks up
 // the named handler.
-func (h *byNameHandler) getNamedHandler(name interface{}) (config.Handler, error) {
+func (h *byNameHandler) getNamedHandler(name interface{}) (cfg.Handler, error) {
 	if handlerName, ok := name.(string); ok {
 		handler, found := h.handlers[handlerName]
 		if !found {
-			return nil, config.ErrBadArgs
+			return nil, cfg.ErrBadArgs
 		}
 		return handler.Handler, nil
 	}
-	return nil, config.ErrBadArgs
+	return nil, cfg.ErrBadArgs
 }
 
 // Args always returns true. A ByName handler always takes at least one additional

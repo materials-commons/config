@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/materials-commons/config"
+	"github.com/materials-commons/config/cfg"
 	"os"
 	"strings"
 )
@@ -9,7 +9,7 @@ import (
 type envHandler struct{}
 
 // EnvHandler returns a Handler that access keys that are environment variables.
-func Env() config.Handler {
+func Env() cfg.Handler {
 	return &envHandler{}
 }
 
@@ -22,12 +22,12 @@ func (h *envHandler) Init() error {
 // It will uppercase the key before attempting to retrieve its value.
 func (h *envHandler) Get(key string, args ...interface{}) (interface{}, error) {
 	if len(args) != 0 {
-		return "", config.ErrArgsNotSupported
+		return "", cfg.ErrArgsNotSupported
 	}
 	ukey := strings.ToUpper(key)
 	val := os.Getenv(ukey)
 	if val == "" {
-		return val, config.ErrKeyNotFound
+		return val, cfg.ErrKeyNotFound
 	}
 	return val, nil
 }
@@ -38,17 +38,17 @@ func (h *envHandler) Get(key string, args ...interface{}) (interface{}, error) {
 // converted to a string it returns ErrBadType.
 func (h *envHandler) Set(key string, value interface{}, args ...interface{}) error {
 	if len(args) != 0 {
-		return config.ErrArgsNotSupported
+		return cfg.ErrArgsNotSupported
 	}
 	ukey := strings.ToUpper(key)
-	sval, err := config.ToString(value)
+	sval, err := cfg.ToString(value)
 	if err != nil {
-		return config.ErrBadType
+		return cfg.ErrBadType
 	}
 
 	err = os.Setenv(ukey, sval)
 	if err != nil {
-		return config.ErrKeyNotSet
+		return cfg.ErrKeyNotSet
 	}
 
 	return nil

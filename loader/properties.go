@@ -2,7 +2,7 @@ package loader
 
 import (
 	p "github.com/dmotylev/goproperties"
-	"github.com/materials-commons/config"
+	"github.com/materials-commons/config/cfg"
 	"io"
 )
 
@@ -11,7 +11,7 @@ type propertiesLoader struct {
 }
 
 // Properties creates a new Loader for properties formatted data.
-func Properties(r io.Reader) config.Loader {
+func Properties(r io.Reader) cfg.Loader {
 	return &propertiesLoader{r: r}
 }
 

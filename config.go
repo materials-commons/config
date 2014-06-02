@@ -1,27 +1,28 @@
 package config
 
 import (
+	"github.com/materials-commons/config/cfg"
 	"time"
 )
 
 // A Configer is a configuration object that can store and retrieve key/value pairs.
 type Configer interface {
-	Initer
-	Getter
-	TypeGetter
-	Setter
-	SetHandler(handler Handler)
-	SetHandlerInit(handler Handler) error
+	cfg.Initer
+	cfg.Getter
+	cfg.TypeGetter
+	cfg.Setter
+	SetHandler(handler cfg.Handler)
+	SetHandlerInit(handler cfg.Handler) error
 }
 
 // config is a private type for storing configuration information.
 type config struct {
-	handler Handler
+	handler cfg.Handler
 }
 
 // New creates a new Configer instance that uses the specified Handler for
 // key/value retrieval and storage.
-func New(handler Handler) Configer {
+func New(handler cfg.Handler) Configer {
 	return &config{handler: handler}
 }
 
@@ -43,7 +44,7 @@ func (c *config) GetInt(key string, args ...interface{}) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	return ToInt(val)
+	return cfg.ToInt(val)
 }
 
 // GetString returns an string value for a key. See TypeGetter interface for
@@ -53,7 +54,7 @@ func (c *config) GetString(key string, args ...interface{}) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return ToString(val)
+	return cfg.ToString(val)
 }
 
 // GetTime returns an time.Time value for a key. See TypeGetter interface for
@@ -63,7 +64,7 @@ func (c *config) GetTime(key string, args ...interface{}) (time.Time, error) {
 	if err != nil {
 		return time.Time{}, err
 	}
-	return ToTime(val)
+	return cfg.ToTime(val)
 }
 
 // GetBool returns an bool value for a key. See TypeGetter interface for
@@ -73,18 +74,18 @@ func (c *config) GetBool(key string, args ...interface{}) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return ToBool(val)
+	return cfg.ToBool(val)
 }
 
 // SetHandler changes the handler for a Configer. If this method is called
 // then you must call Init before accessing any of the keys.
-func (c *config) SetHandler(handler Handler) {
+func (c *config) SetHandler(handler cfg.Handler) {
 	c.handler = handler
 }
 
 // SetHandlerInit changes the handler for a Configer. It also immediately calls
 // Init and returns the error from this call.
-func (c *config) SetHandlerInit(handler Handler) error {
+func (c *config) SetHandlerInit(handler cfg.Handler) error {
 	c.handler = handler
 	return c.Init()
 }

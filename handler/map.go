@@ -1,14 +1,14 @@
 package handler
 
 import (
-	"github.com/materials-commons/config"
+	"github.com/materials-commons/config/cfg"
 )
 
 type mapHandler struct {
 	values map[string]interface{}
 }
 
-func Map() config.Handler {
+func Map() cfg.Handler {
 	return &mapHandler{values: make(map[string]interface{})}
 }
 
@@ -18,11 +18,11 @@ func (h *mapHandler) Init() error {
 
 func (h *mapHandler) Get(key string, args ...interface{}) (interface{}, error) {
 	if len(args) != 0 {
-		return nil, config.ErrArgsNotSupported
+		return nil, cfg.ErrArgsNotSupported
 	}
 	val, found := h.values[key]
 	if !found {
-		return val, config.ErrKeyNotFound
+		return val, cfg.ErrKeyNotFound
 	}
 	return val, nil
 }
@@ -31,7 +31,7 @@ func (h *mapHandler) Get(key string, args ...interface{}) (interface{}, error) {
 // Values are not persisted across runs.
 func (h *mapHandler) Set(key string, value interface{}, args ...interface{}) error {
 	if len(args) != 0 {
-		return config.ErrArgsNotSupported
+		return cfg.ErrArgsNotSupported
 	}
 	h.values[key] = value
 	return nil

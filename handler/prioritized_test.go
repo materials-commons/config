@@ -2,7 +2,7 @@ package handler
 
 import (
 	"bytes"
-	"github.com/materials-commons/config"
+	"github.com/materials-commons/config/cfg"
 	"github.com/materials-commons/config/loader"
 	"testing"
 )
@@ -19,7 +19,7 @@ func TestPrioritizedHandler(t *testing.T) {
 
 	// Get Non existent key
 	_, err := h.Get("TEST", "map")
-	if err != config.ErrKeyNotFound {
+	if err != cfg.ErrKeyNotFound {
 		t.Fatalf("Looked up of nonexistent key should have returned ErrKeyNotFound, instead: %s", err)
 	}
 

@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/materials-commons/config"
+	"github.com/materials-commons/config/cfg"
 )
 
 const (
@@ -19,7 +19,7 @@ const (
 )
 
 // Viper implements github.com/spf13/viper
-func Viper(loader config.Loader) config.Handler {
+func Viper(loader cfg.Loader) cfg.Handler {
 	return LowercaseKey(
 		Prioritized(
 			NameHandler(Default, Map()),
@@ -29,7 +29,7 @@ func Viper(loader config.Loader) config.Handler {
 
 // ViperCaseSensitive implements github.com/spf13/viper except that keys
 // are case sensitive.
-func ViperCaseSensitive(loader config.Loader) config.Handler {
+func ViperCaseSensitive(loader cfg.Loader) cfg.Handler {
 	return Prioritized(
 		NameHandler(Default, Map()),
 		NameHandler(Override, Map()),
@@ -38,7 +38,7 @@ func ViperCaseSensitive(loader config.Loader) config.Handler {
 
 // ViperEx implements github.com/spf13/viper with the addition of environment
 // variables checked before checking for values in the ini file(s).
-func ViperEx(loader config.Loader) config.Handler {
+func ViperEx(loader cfg.Loader) cfg.Handler {
 	return LowercaseKey(
 		Prioritized(
 			NameHandler(Default, Map()),
@@ -48,7 +48,7 @@ func ViperEx(loader config.Loader) config.Handler {
 }
 
 // ViperExCaseSensitive implements ViperEx except that keys are case sensitive.
-func ViperExCaseSensitive(loader config.Loader) config.Handler {
+func ViperExCaseSensitive(loader cfg.Loader) cfg.Handler {
 	return Prioritized(
 		NameHandler(Default, Map()),
 		NameHandler(Override, Map()),

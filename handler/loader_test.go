@@ -2,7 +2,7 @@ package handler
 
 import (
 	"bytes"
-	"github.com/materials-commons/config"
+	"github.com/materials-commons/config/cfg"
 	"github.com/materials-commons/config/loader"
 	"testing"
 )
@@ -22,7 +22,7 @@ func TestLoaderHandler(t *testing.T) {
 
 	// Get Non existent key
 	_, err := h.Get("test1")
-	if err != config.ErrKeyNotFound {
+	if err != cfg.ErrKeyNotFound {
 		t.Fatalf("Looked up of nonexistent key should have returned ErrKeyNotFound, instead: %s", err)
 	}
 
@@ -70,11 +70,11 @@ func TestLoaderHandler(t *testing.T) {
 	}
 
 	// Make sure that calls with extra args fail.
-	if _, err := h.Get("TEST", "EXTRA_ARG"); err != config.ErrArgsNotSupported {
+	if _, err := h.Get("TEST", "EXTRA_ARG"); err != cfg.ErrArgsNotSupported {
 		t.Fatalf("Get with extra args returned wrong err: %s", err)
 	}
 
-	if err := h.Set("TEST", "BLAH", "EXTRA_ARG"); err != config.ErrArgsNotSupported {
+	if err := h.Set("TEST", "BLAH", "EXTRA_ARG"); err != cfg.ErrArgsNotSupported {
 		t.Fatalf("Set with extra args returned wrong err: %s", err)
 	}
 

@@ -3,7 +3,7 @@ package loader
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/materials-commons/config"
+	"github.com/materials-commons/config/cfg"
 	"io"
 )
 
@@ -12,7 +12,7 @@ type jsonLoader struct {
 }
 
 // JSON creates a new Loader for JSON formatted data.
-func JSON(r io.Reader) config.Loader {
+func JSON(r io.Reader) cfg.Loader {
 	return &jsonLoader{r: r}
 }
 
