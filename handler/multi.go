@@ -31,9 +31,14 @@ func (h *multiHandler) Init() error {
 // when one of the handlers returns a value. Get checks each handler to see if it
 // should call it with the additional arguments.
 func (h *multiHandler) Get(key string, args ...interface{}) (interface{}, error) {
+	lengthArgs := len(args)
+	if lengthArgs > 0 && !h.Args() {
+		return nil, config.ErrArgsNotSupported
+	}
+
 	for _, handler := range h.handlers {
 		switch {
-		case handler.Args():
+		case lengthArgs != 0 && handler.Args():
 			if val, err := handler.Get(key, args...); err == nil {
 				return val, nil
 			}
@@ -50,9 +55,14 @@ func (h *multiHandler) Get(key string, args ...interface{}) (interface{}, error)
 // when one of the handlers successfully sets the key value. Set checks each handler
 // to see if it should call it with the additional arguments.
 func (h *multiHandler) Set(key string, value interface{}, args ...interface{}) error {
+	lengthArgs := len(args)
+	if lengthArgs > 0 && !h.Args() {
+		return config.ErrArgsNotSupported
+	}
+
 	for _, handler := range h.handlers {
 		switch {
-		case handler.Args():
+		case lengthArgs != 0 && handler.Args():
 			if err := handler.Set(key, value, args...); err == nil {
 				return nil
 			}
