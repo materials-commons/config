@@ -6,6 +6,8 @@ import (
 	"testing"
 )
 
+var _ = fmt.Println
+
 var tomlTestData = []byte(`
 [test]
 stringkey = "stringvalue"
@@ -27,12 +29,12 @@ func TestTOMLLoader(t *testing.T) {
 		t.Fatalf("failed loading TOML: %s", err)
 	}
 
-	fmt.Printf("vals = %#v\n", vals)
-
-	if tvals, found = vals["test"]; !found {
+	ttvals, found := vals["test"]
+	if !found {
 		t.Fatalf("Failed to lookup key 'test'")
 	}
 
+	tvals = ttvals.(map[string]interface{})
 	if val, found = tvals["stringkey"]; !found {
 		t.Fatalf("Failed to lookup key 'stringkey'")
 	}
@@ -42,6 +44,21 @@ func TestTOMLLoader(t *testing.T) {
 		t.Fatalf("Unexpected value for sval '%s', expected 'stringvalue'", sval)
 	}
 
-	var _ = val
-	var _ = found
+	if val, found = tvals["boolkey"]; !found {
+		t.Fatalf("Failed to lookup key 'boolkey'")
+	}
+
+	bval := val.(bool)
+	if !bval {
+		t.Fatalf("Unexpected value for bval, expected true")
+	}
+
+	if val, found = tvals["intkey"]; !found {
+		t.Fatalf("Failed to lookup key 'intkey'")
+	}
+
+	ival := val.(int64)
+	if ival != 123 {
+		t.Fatalf("Unexpected value for ival '%d', expected 123", ival)
+	}
 }
