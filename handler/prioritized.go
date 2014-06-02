@@ -26,7 +26,7 @@ func Prioritized(handlers ...*HandlerName) config.Handler {
 // an error then initialization stops and the error is returned.
 func (h *prioritizedHandler) Init() error {
 	// Only need to initialize the handlers once. We can choose to do
-	// this with either set of handlers.
+	// this with either set of handlers. We'll do the Multi handler.
 	return h.byName.Init()
 }
 
