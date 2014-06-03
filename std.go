@@ -7,7 +7,8 @@ import (
 )
 
 // Store configuration in environment as specified for 12 Factor Applications:
-// http://12factor.net/config
+// http://12factor.net/config. The hanler is thread safe and can safely be
+// used across multiple go routines.
 var TwelveFactor = handler.Env()
 
 // Store configuration in environment, but allow overrides, either by the
