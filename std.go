@@ -19,6 +19,11 @@ var TwelveFactorWithOverride = handler.Multi(handler.Sync(handler.Map()), handle
 
 var std Configer
 
+func init() {
+	std = New(TwelveFactor)
+	std.Init()
+}
+
 // Init initializes the standard Configer using the specified handler. The
 // standard configer is a global config that can be conveniently accessed
 // from the config package.
