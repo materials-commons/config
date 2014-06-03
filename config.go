@@ -5,6 +5,9 @@ import (
 	"time"
 )
 
+// LoggerFunc is the function to call to log config events.
+type LoggerFunc func(method, key string, value interface{}, err error, args ...interface{})
+
 // A Configer is a configuration object that can store and retrieve key/value pairs.
 type Configer interface {
 	cfg.Initer
@@ -14,13 +17,15 @@ type Configer interface {
 	cfg.Setter
 	SetHandler(handler cfg.Handler)
 	SetHandlerInit(handler cfg.Handler) error
+	SetLogger(l LoggerFunc)
 }
 
 // config is a private type for storing configuration information.
 type config struct {
-	handler   cfg.Handler
+	handler   cfg.Handler   // Handler being used
 	lastError error         // Last error see on get
 	efunc     cfg.ErrorFunc // Error function to call see SetErrorHandler
+	lfunc     LoggerFunc    // Logger function to call
 }
 
 // New creates a new Configer instance that uses the specified Handler for
@@ -39,6 +44,7 @@ func (c *config) Init() error {
 func (c *config) Get(key string, args ...interface{}) (interface{}, error) {
 	value, err := c.handler.Get(key, args...)
 	c.lastError = err
+	c.log("GET", key, "", err, args...)
 	return value, err
 }
 
@@ -168,5 +174,19 @@ func (c *config) SetHandlerInit(handler cfg.Handler) error {
 
 // Set sets key to value. See Setter interface for error codes.
 func (c *config) Set(key string, value interface{}, args ...interface{}) error {
-	return c.handler.Set(key, value, args...)
+	err := c.handler.Set(key, value, args...)
+	c.log("SET", key, value, err, args...)
+	return err
+}
+
+// SetLogger sets the logging function to call for configuration events.
+func (c *config) SetLogger(l LoggerFunc) {
+	c.lfunc = l
+}
+
+// log calls the logging function set with SetLogger.
+func (c *config) log(method, key string, value interface{}, err error, args ...interface{}) {
+	if c.lfunc != nil {
+		c.lfunc(method, key, value, err, args...)
+	}
 }
