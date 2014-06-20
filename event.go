@@ -4,35 +4,35 @@ import (
 	"strings"
 )
 
-// A configuration event
+// Event is a configuration event.
 type Event int
 
 const (
-	// Get key event
+	// GET Get key event
 	GET Event = iota
 
-	// Set key event
+	// SET Set key event
 	SET
 
-	// Convert to int event
+	// TOINT Convert to int event
 	TOINT
 
-	// Convert to string event
+	// TOSTRING Convert to string event
 	TOSTRING
 
-	// Convert to bool event
+	// TOBOOL Convert to bool event
 	TOBOOL
 
-	// Convert to time event
+	// TOTIME Convert to time event
 	TOTIME
 
-	// Swap handler event
+	// SWAP Swap handler event
 	SWAP
 
-	// Initialize handler event
+	// INIT Initialize handler event
 	INIT
 
-	// Unknown event
+	// UNKNOWN Unknown event
 	UNKNOWN
 )
 

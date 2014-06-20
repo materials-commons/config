@@ -30,7 +30,7 @@ func (h *HotSwapHandler) Set(key string, value interface{}, args ...interface{})
 	return h.handler.Set(key, value, args...)
 }
 
-// Args() returns true if the underlying handler supports multiple args. It is thread safe.
+// Args returns true if the underlying handler supports multiple args. It is thread safe.
 func (h *HotSwapHandler) Args() bool {
 	return h.handler.Args()
 }

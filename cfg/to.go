@@ -71,7 +71,7 @@ func ToInt64E(in interface{}) (int64, error) {
 	case string:
 		v, err := strconv.ParseInt(s, 0, 64)
 		if err != nil {
-			return 0, fmt.Errorf("Unable to Cast %#v to int", in)
+			return 0, fmt.Errorf("unable to Cast %#v to int", in)
 		}
 		return v, nil
 	case float64:
@@ -84,7 +84,7 @@ func ToInt64E(in interface{}) (int64, error) {
 	case nil:
 		return 0, nil
 	default:
-		return 0, fmt.Errorf("Unable to Cast %#v to int", in)
+		return 0, fmt.Errorf("unable to Cast %#v to int", in)
 	}
 }
 
