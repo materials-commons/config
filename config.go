@@ -1,8 +1,10 @@
 package config
 
 import (
-	"github.com/materials-commons/config/cfg"
+	"strings"
 	"time"
+
+	"github.com/materials-commons/config/cfg"
 )
 
 // LoggerFunc is the function to call to log config events.
@@ -18,6 +20,7 @@ type Configer interface {
 	SetHandler(handler cfg.Handler)
 	SetHandlerInit(handler cfg.Handler) error
 	SetLogger(l LoggerFunc)
+	SetKeyPrefix(prefix string)
 }
 
 // config is a private type for storing configuration information.
@@ -26,6 +29,7 @@ type config struct {
 	lastError error         // Last error see on get
 	efunc     cfg.ErrorFunc // Error function to call see SetErrorHandler
 	lfunc     LoggerFunc    // Logger function to call
+	keyPrefix string        // String to prefix keys with
 }
 
 // New creates a new Configer instance that uses the specified Handler for
@@ -44,7 +48,7 @@ func (c *config) Init() error {
 
 // Get returns the value for a key. It can return any value type.
 func (c *config) Get(key string, args ...interface{}) (interface{}, error) {
-	value, err := c.handler.Get(key, args...)
+	value, err := c.handler.Get(c.toKey(key), args...)
 	c.lastError = err
 	c.log(GET, err, toVarArgs(args, key)...)
 	return value, err
@@ -184,7 +188,7 @@ func (c *config) SetHandlerInit(handler cfg.Handler) error {
 
 // Set sets key to value. See Setter interface for error codes.
 func (c *config) Set(key string, value interface{}, args ...interface{}) error {
-	err := c.handler.Set(key, value, args...)
+	err := c.handler.Set(c.toKey(key), value, args...)
 	c.log(SET, err, toVarArgs(args, key, value)...)
 	return err
 }
@@ -192,6 +196,13 @@ func (c *config) Set(key string, value interface{}, args ...interface{}) error {
 // SetLogger sets the logging function to call for configuration events.
 func (c *config) SetLogger(l LoggerFunc) {
 	c.lfunc = l
+}
+
+// SetKeyPrefix sets the default characters to prepend to a key. This
+// is a convenience function so that users can use a default key name
+// and not have to remember the prefix.
+func (c *config) SetKeyPrefix(prefix string) {
+	c.keyPrefix = prefix
 }
 
 // log calls the logging function set with SetLogger.
@@ -205,4 +216,17 @@ func (c *config) log(event Event, err error, args ...interface{}) {
 // new set of variable arguments.
 func toVarArgs(args []interface{}, additionalArgs ...interface{}) []interface{} {
 	return append(additionalArgs, args...)
+}
+
+// toKey takes a key and if appropriate prefixes it with the keyPrefix. It
+// doesn't prefix the keyPrefix if the key already starts with it.
+func (c *config) toKey(key string) string {
+	switch {
+	case c.keyPrefix == "":
+		return key
+	case strings.HasPrefix(c.keyPrefix, key):
+		return key
+	default:
+		return c.keyPrefix + key
+	}
 }
