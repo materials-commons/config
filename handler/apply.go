@@ -1,8 +1,10 @@
 package handler
 
 import (
-	"github.com/materials-commons/config/cfg"
+	"fmt"
 	"strings"
+
+	"github.com/materials-commons/config/cfg"
 )
 
 // KeyFunc is the type of a function to apply to a key to produce a transformed one.
@@ -93,4 +95,9 @@ func LowercaseKey(handler cfg.Handler) cfg.Handler {
 // UppercaseKey creates a new Apply handler that upper cases all keys.
 func UppercaseKey(handler cfg.Handler) cfg.Handler {
 	return Apply(func(key string) (string, error) { return strings.ToUpper(key), nil }, nil, handler)
+}
+
+// PrefixKey will prefix all keys with the given prefix string.
+func PrefixKey(handler cfg.Handler, prefix string) cfg.Handler {
+	return Apply(func(key string) (string, error) { return fmt.Sprintf("%s%s", prefix, key), nil }, nil, handler)
 }
