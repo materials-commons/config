@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/gob"
 
-	consul "github.com/armon/consul-api"
+	consul "github.com/hashicorp/consul/api"
 	"github.com/materials-commons/config/cfg"
 )
 
