@@ -9,7 +9,7 @@ type etcdHandler struct {
 	client *etcd.Client // Etcd client connection
 }
 
-// Etcd returns a Handler that access keys that are stored in Etcd.
+// Etcd returns a Handler that accesses keys that are stored in Etcd.
 func Etcd(client *etcd.Client) cfg.Handler {
 	return &etcdHandler{
 		client: client,
