@@ -9,19 +9,23 @@ import (
 )
 
 type consulHandler struct {
-	client *consul.Client
+	client *consul.Client // consul client connection
 }
 
+// Consul returns a Handler that accesses keys stored in Consul.
 func Consul(client *consul.Client) cfg.Handler {
 	return &consulHandler{
 		client: client,
 	}
 }
 
+// Init doesn't do anything. The connection to consul is setup
+// in the Consul call.
 func (h *consulHandler) Init() error {
 	return nil
 }
 
+// Get retrieves a key from Consul. Any error calling Consul is mapped to ErrKeyNotFound.
 func (h *consulHandler) Get(key string, args ...interface{}) (interface{}, error) {
 	if len(args) != 0 {
 		return nil, cfg.ErrArgsNotSupported
@@ -35,6 +39,10 @@ func (h *consulHandler) Get(key string, args ...interface{}) (interface{}, error
 	return kv.Value, nil
 }
 
+// Set will set a key value. Values will be converted and stored as bytes. It will
+// attempt to convert the value to bytes before it stores it. If the value cannot
+// be converted to bytes it will return ErrBadType. Any error calling etcd will
+// be returned as ErrKeyNotSet.
 func (h *consulHandler) Set(key string, value interface{}, args ...interface{}) error {
 	if len(args) != 0 {
 		return cfg.ErrArgsNotSupported
@@ -56,10 +64,12 @@ func (h *consulHandler) Set(key string, value interface{}, args ...interface{}) 
 	return nil
 }
 
+// Args returns false. This handler doesn't accept addtional arguments.
 func (h *consulHandler) Args() bool {
 	return false
 }
 
+// toBytes will convert a value to bytes buffer.
 func toBytes(value interface{}) ([]byte, error) {
 	var buf bytes.Buffer
 	enc := gob.NewEncoder(&buf)
