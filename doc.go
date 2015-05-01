@@ -72,10 +72,8 @@ be safe across multiple go routines. Here is what that looks like:
 
     func main() {
          b, _ := ioutil.ReadFile("/etc/myapp/app.yaml")
-	 l := loader.YAML(bytes.NewReader(b))
-	 myAppHandler := handler.Multi(
-	    handler.Sync(handler.Env(), handler.Loader(l))
-	 )
+	     l := loader.YAML(bytes.NewReader(b))
+	     myAppHandler := handler.Sync(handler.Multi(handler.Env(), handler.Loader(l)))
          config.Init(myAppHandler)
          port := config.GetInt("MYAPP_PORT")
     }
